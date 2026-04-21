@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roop Singh Tikki Chaat Corner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div id="app" class="mobile-container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header sticky">
+        <!-- Brand Row -->
+        <div class="brand-logo">
+            <div class="logo-icon">RS</div>
+            <div class="logo-text">Roop Singh Tikki Chaat Corner</div>
+        </div>
+        <!-- Address + Actions Row -->
+        <div class="address-area">
+            <i data-lucide="map-pin"></i>
+            <div class="address-details" onclick="detectLocation()" style="cursor:pointer; flex:1; min-width:0;">
+                <h1 id="header-title">Delivery in 8 minutes</h1>
+                <span class="tagline" id="location-tag">Tap to detect location…</span>
+            </div>
+            <div class="header-actions">
+                <!-- Active order indicator -->
+                <div id="floating-order-indicator" class="floating-order-indicator inactive" onclick="startTracking()" title="Track your order">
+                    <div class="pulse-dot"></div>
+                    <i data-lucide="bike"></i>
+                </div>
+                <!-- Auth button -->
+                <button class="icon-btn" id="auth-btn" onclick="openAuthModal()" title="Account">
+                    <i data-lucide="user"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== SCREENS ===== -->
+    <main id="screen-container">
+
+        <!-- ======================== HOME SCREEN ======================== -->
+        <section id="home-screen" class="screen active">
+
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+                <div style="flex:1;">
+                    <h2 style="font-size:18px;font-weight:900;color:#1c4e80;margin-bottom:4px;">Get 10% OFF 🎉</h2>
+                    <p style="font-size:12px;color:#3a6ea5;font-weight:700;margin-bottom:6px;">on your first order above ₹250</p>
+                    <span class="delivery-time">Use: SAVE10</span>
+                </div>
+                <img src="photos/hero.jpg" alt="Promo" style="width:80px;height:80px;border-radius:14px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.12);"
+                     onerror="this.style.display='none'">
+            </div>
+
+            <div style="padding:16px;">
+                <!-- Search -->
+                <div class="search-bar" style="margin-bottom:20px;">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="search-input" placeholder="Search 'golgappe' or 'tikki'…">
+                </div>
+
+                <!-- Category Grid -->
+                <div class="category-grid" style="margin-bottom:24px;">
+                    <div class="cat-item active" data-category="All">
+                        <div style="border:2px solid transparent;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#fff;">
+                            <img src="photos/hero.jpg" style="width:100%;height:100%;object-fit:cover;" alt="All" onerror="this.parentElement.style.background='#f7cb46'">
+                        </div>
+                        <span>All</span>
+                    </div>
+                    <div class="cat-item" data-category="Golgappe">
+                        <div style="border:2px solid transparent;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#fff;">
+                            <img src="photos/golgappe.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Golgappe" onerror="this.parentElement.style.background='#27ae60'">
+                        </div>
+                        <span>Golgappe</span>
+                    </div>
+                    <div class="cat-item" data-category="Tikki">
+                        <div style="border:2px solid transparent;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#fff;">
+                            <img src="photos/tikki.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Tikki" onerror="this.parentElement.style.background='#e67e22'">
+                        </div>
+                        <span>Tikki</span>
+                    </div>
+                    <div class="cat-item" data-category="Specials">
+                        <div style="border:2px solid transparent;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#fff;">
+                            <img src="photos/special.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Specials" onerror="this.parentElement.style.background='#9b59b6'">
+                        </div>
+                        <span>Specials</span>
+                    </div>
+                </div>
+
+                <!-- Menu -->
+                <div class="menu-section">
+                    <div class="section-header">
+                        <h3 style="font-size:16px;font-weight:900;">Street Food Specials</h3>
+                        <a href="#" style="font-size:12px;color:#d97706;font-weight:800;text-decoration:none;">View All</a>
+                    </div>
+                    <div id="menu-grid" class="menu-grid">
+                        <!-- Injected by JS -->
+                    </div>
+                    <div id="no-results" class="empty-state hidden">
+                        <i data-lucide="search-x"></i>
+                        <h3>No items found</h3>
+                        <p>Try a different search term</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================== CHECKOUT SCREEN ======================== -->
+        <section id="checkout-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')"><i data-lucide="chevron-left"></i></button>
+                <h2>Review Order</h2>
+            </div>
+
+            <div style="padding:0 0 16px;">
+                <!-- Address -->
+                <div class="checkout-card">
+                    <div class="card-header">
+                        <i data-lucide="map-pin"></i>
+                        <h3>Delivery Address</h3>
+                        <button class="text-link" onclick="detectLocation()">Change</button>
+                    </div>
+                    <p id="current-address" style="font-size:13px;color:#555;font-weight:600;">123, Street Food Lane, Civil Lines</p>
+                    <div class="mock-distance">
+                        <div class="distance-info">
+                            <span>Mock Distance</span>
+                            <strong id="distance-val">0.5 km</strong>
+                        </div>
+                        <input type="range" id="distance-slider" min="0.1" max="5" step="0.1" value="0.5">
+                        <small>*Free delivery for orders ≥ ₹250 and ≤ 1km</small>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="checkout-card">
+                    <h3 style="font-size:15px;font-weight:900;margin-bottom:14px;">Order Summary</h3>
+                    <div id="cart-items-list" class="cart-list"></div>
+                </div>
+
+                <!-- Coupon -->
+                <div class="checkout-card">
+                    <div class="card-header">
+                        <i data-lucide="tag"></i>
+                        <h3>Coupons & Offers</h3>
+                    </div>
+                    <div id="applied-coupon" class="applied-coupon hidden">
+                        <div class="coupon-info">
+                            <div class="coupon-icon">%</div>
+                            <div>
+                                <strong id="coupon-name"></strong>
+                                <small id="coupon-savings"></small>
+                            </div>
+                        </div>
+                        <button onclick="removeCoupon()" class="remove-coupon">✕ Remove</button>
+                    </div>
+                    <div id="coupon-input-area" class="coupon-input">
+                        <input type="text" id="coupon-code" placeholder="Enter coupon code (SAVE10)">
+                        <button onclick="applyCoupon()">APPLY</button>
+                    </div>
+                </div>
+
+                <!-- Bill -->
+                <div class="checkout-card">
+                    <h3 style="font-size:15px;font-weight:900;margin-bottom:14px;">Bill Details</h3>
+                    <div class="bill-row"><span>Item Total</span><span id="bill-subtotal">₹0</span></div>
+                    <div class="bill-row green"><span>Coupon Discount</span><span id="bill-discount">-₹0</span></div>
+                    <div class="bill-row"><span>Delivery Fee</span><span id="bill-delivery">₹0</span></div>
+                    <hr style="border:none;border-top:1px dashed #eee;margin:10px 0;">
+                    <div class="bill-row total"><span>To Pay</span><span id="bill-total">₹0</span></div>
+                </div>
+
+                <!-- Payment -->
+                <div class="checkout-card">
+                    <h3 style="font-size:15px;font-weight:900;margin-bottom:14px;">Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-option active">
+                            <input type="radio" name="payment" value="online" checked>
+                            <div class="payment-content">
+                                <i data-lucide="credit-card"></i>
+                                <div><strong>Online Payment</strong><small>UPI, Cards, Net Banking</small></div>
+                            </div>
+                            <div class="radio-circle"></div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cod">
+                            <div class="payment-content">
+                                <i data-lucide="banknote"></i>
+                                <div><strong>Cash on Delivery</strong><small>Pay when food arrives</small></div>
+                            </div>
+                            <div class="radio-circle"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="primary-btn place-order-btn" onclick="placeOrder()">
+                    Place Order • <span id="btn-total">₹0</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ======================== ORDERS SCREEN ======================== -->
+        <section id="orders-screen" class="screen">
+            <div class="screen-header"><h2>My Orders</h2></div>
+            <div id="orders-content" style="padding:12px;">
+                <!-- Injected by renderOrders() -->
+            </div>
+        </section>
+
+        <!-- ======================== FAVORITES SCREEN ======================== -->
+        <section id="favorites-screen" class="screen">
+            <div class="screen-header"><h2>Favorites</h2></div>
+            <div id="favorites-list" style="padding:12px;"></div>
+        </section>
+
+        <!-- ======================== SHOP / ABOUT SCREEN ======================== -->
+        <section id="shop-screen" class="screen">
+            <!-- Hero Gallery -->
+            <div class="shop-header-gallery">
+                <img src="photos/special.jpg" alt="Shop" onerror="this.src='https://placehold.co/480x180/f7cb46/1a1a1a?text=Roop+Singh'">
+                <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);padding:20px;color:white;">
+                    <h2 style="font-size:20px;font-weight:900;margin-bottom:4px;">Roop Singh Tikki Chaat Corner</h2>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;">
+                        <span style="background:#4cd137;padding:2px 8px;border-radius:4px;color:white;">4.5 ★</span>
+                        <span style="opacity:0.9;">(500+ Reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:16px;">
+                <!-- Store Details -->
+                <div class="checkout-card" style="margin-bottom:16px;">
+                    <h3 style="font-size:15px;font-weight:900;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f5f5f5;color:#1a1a1a;">Store Details</h3>
+                    <div style="display:flex;flex-direction:column;gap:14px;">
+                        <a href="tel:9988776655" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+                            <div style="background:#e9f5ff;color:#3498db;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="phone" style="width:16px;height:16px;"></i>
+                            </div>
+                            <div>
+                                <small style="display:block;font-size:10px;color:#999;font-weight:800;text-transform:uppercase;">Contact</small>
+                                <span style="font-size:13px;font-weight:700;color:#1a1a1a;">+91 99887 76655</span>
+                            </div>
+                        </a>
+                        <a href="mailto:hello@roopsingh.com" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+                            <div style="background:#f0fdf4;color:#2ecc71;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="mail" style="width:16px;height:16px;"></i>
+                            </div>
+                            <div>
+                                <small style="display:block;font-size:10px;color:#999;font-weight:800;text-transform:uppercase;">Email</small>
+                                <span style="font-size:13px;font-weight:700;color:#1a1a1a;">hello@roopsingh.com</span>
+                            </div>
+                        </a>
+                        <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="window.open('https://maps.google.com/?q=Alambagh+Lucknow', '_blank')">
+                            <div style="background:#fff1f2;color:#e11d48;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="map-pin" style="width:16px;height:16px;"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <small style="display:block;font-size:10px;color:#999;font-weight:800;text-transform:uppercase;">Location</small>
+                                <span style="font-size:13px;font-weight:700;color:#1a1a1a;">Alambagh, Lucknow, UP</span>
+                            </div>
+                            <i data-lucide="chevron-right" style="width:14px;height:14px;color:#ccc;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Mini Map -->
+                    <div class="shop-mini-map" onclick="window.open('https://maps.google.com/?q=Alambagh+Lucknow', '_blank')"
+                         style="margin-top:14px;height:110px;background:#f8fafc;border-radius:16px;overflow:hidden;position:relative;border:1px solid #e2e8f0;cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;">
+                        <div style="position:absolute;inset:0;background-image:radial-gradient(#cbd5e1 1.2px,transparent 1.2px);background-size:24px 24px;opacity:0.35;"></div>
+                        <!-- Pulse rings -->
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                            <div style="width:70px;height:70px;background:rgba(225,29,72,0.08);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:mapPulse 2.2s infinite;"></div>
+                            <div style="width:44px;height:44px;background:rgba(225,29,72,0.14);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:mapPulse 2.2s infinite 0.6s;"></div>
+                        </div>
+                        <!-- Marker -->
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;z-index:2;">
+                            <div style="background:#e11d48;color:white;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(225,29,72,0.45);animation:floatMarker 3s ease-in-out infinite;">
+                                <i data-lucide="store" style="width:16px;height:16px;transform:rotate(45deg);"></i>
+                            </div>
+                            <div style="background:white;padding:3px 10px;border-radius:50px;font-size:8px;font-weight:900;margin-top:10px;border:1px solid #eee;box-shadow:0 3px 8px rgba(0,0,0,0.06);color:#1e293b;letter-spacing:0.5px;">ROOP SINGH</div>
+                        </div>
+                        <!-- Tap overlay -->
+                        <div style="position:absolute;bottom:7px;right:9px;background:rgba(255,255,255,0.9);padding:3px 9px;border-radius:50px;font-size:8px;font-weight:800;color:#64748b;border:1px solid #e2e8f0;display:flex;align-items:center;gap:3px;">
+                            <i data-lucide="external-link" style="width:9px;height:9px;"></i> Open Maps
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Grid -->
+                <h3 style="font-size:15px;font-weight:900;margin-bottom:12px;">Our Food & Vibe</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+                    <div style="border-radius:14px;overflow:hidden;aspect-ratio:1;"><img src="photos/golgappe.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Golgappe" onerror="this.parentElement.style.background='#27ae60'"></div>
+                    <div style="border-radius:14px;overflow:hidden;aspect-ratio:1;"><img src="photos/tikki.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Tikki" onerror="this.parentElement.style.background='#e67e22'"></div>
+                    <div style="border-radius:14px;overflow:hidden;aspect-ratio:1;"><img src="photos/dahi-puri.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Dahi Puri" onerror="this.parentElement.style.background='#3498db'"></div>
+                    <div style="border-radius:14px;overflow:hidden;aspect-ratio:1;"><img src="photos/special.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Special" onerror="this.parentElement.style.background='#9b59b6'"></div>
+                </div>
+
+                <!-- Reviews -->
+                <div class="checkout-card" style="margin-bottom:16px;background:#fafafa;">
+                    <h3 style="font-size:15px;font-weight:900;margin-bottom:12px;">Customer Reviews</h3>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="border-left:3px solid var(--primary);padding-left:12px;">
+                            <div style="display:flex;gap:4px;margin-bottom:4px;">★★★★★</div>
+                            <p style="font-size:11px;font-weight:600;font-style:italic;color:#555;">"Best Tikki in Lucknow! Bilkul waisa hi swaad jaisa bachpan mein hota tha."</p>
+                            <span style="font-size:9px;font-weight:800;color:#aaa;">— Rahul K.</span>
+                        </div>
+                        <div style="border-left:3px solid #3498db;padding-left:12px;">
+                            <div style="display:flex;gap:4px;margin-bottom:4px;">★★★★★</div>
+                            <p style="font-size:11px;font-weight:600;font-style:italic;color:#555;">"Golgappe ka paani is just wow! Spicy and perfect balance of flavors."</p>
+                            <span style="font-size:9px;font-weight:800;color:#aaa;">— Sneha M.</span>
+                        </div>
+                        <div style="border-left:3px solid #27ae60;padding-left:12px;">
+                            <div style="display:flex;gap:4px;margin-bottom:4px;">★★★★☆</div>
+                            <p style="font-size:11px;font-weight:600;font-style:italic;color:#555;">"Dahi Golgappe were absolutely divine. Will definitely order again!"</p>
+                            <span style="font-size:9px;font-weight:800;color:#aaa;">— Priya S.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tagline -->
+                <div style="text-align:center;padding:30px 20px;border-top:1px dashed #e0e0e0;">
+                    <h2 style="font-weight:800;color:#444;line-height:1.5;font-size:17px;font-style:italic;">
+                        "Swad aisa ki dil bole,<br>
+                        <span style="color:#d97706;font-size:22px;">Ek plate aur please!</span>"
+                    </h2>
+                    <p style="margin-top:10px;font-size:11px;color:#999;font-weight:700;">Roop Singh — Swaad ka Asli Adda 🍛</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================== SUCCESS SCREEN ======================== -->
+        <section id="success-screen" class="screen">
+            <div class="success-content">
+                <div class="success-icon">
+                    <i data-lucide="check-circle-2"></i>
+                </div>
+                <h2>Order Placed! 🎉</h2>
+                <p>Your delicious street food is on its way!</p>
+            </div>
+
+            <div class="order-details-card">
+                <div class="detail-row">
+                    <i data-lucide="package"></i>
+                    <div><label>Order ID</label><strong id="success-order-id">#RSTC-00000</strong></div>
+                </div>
+                <div class="detail-row">
+                    <i data-lucide="map-pin"></i>
+                    <div><label>Delivery To</label><strong id="success-delivery-address">123, Civil Lines</strong></div>
+                </div>
+                <div class="detail-row">
+                    <i data-lucide="clock"></i>
+                    <div><label>Estimated Time</label><strong>20 – 30 Mins</strong></div>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <button class="primary-btn" onclick="startTracking()">Track My Order</button>
+                <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
+            </div>
+        </section>
+
+        <!-- ======================== TRACKING SCREEN ======================== -->
+        <section id="tracking-screen" class="screen" style="padding:0;">
+
+            <!-- Empty state -->
+            <div id="tracking-empty-state" class="hidden" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;padding:40px 20px;text-align:center;">
+                <div style="background:#fdf2f2;width:120px;height:120px;border-radius:40px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;transform:rotate(-10deg);box-shadow:0 20px 40px rgba(0,0,0,0.04);">
+                    <i data-lucide="bike" style="width:56px;height:56px;color:#e63946;opacity:0.2;"></i>
+                </div>
+                <h2 style="font-size:22px;font-weight:900;color:#2d3436;margin-bottom:10px;">No Active Order</h2>
+                <p style="color:#636e72;font-size:14px;line-height:1.7;margin-bottom:32px;max-width:240px;">Looks like you haven't ordered anything yet.<br>Tikki is waiting! 🍛</p>
+                <button class="primary-btn" onclick="showScreen('home')" style="width:220px;">Browse Menu</button>
+            </div>
+
+            <!-- Active tracking -->
+            <div id="tracking-active-content">
+                <div class="tracking-header">
+                    <button class="back-btn-tracking" onclick="showScreen('home')"><i data-lucide="chevron-left"></i></button>
+                    <div class="header-status">
+                        <h3 id="tracking-eta-text">Arriving in 22 mins</h3>
+                        <p>Order #<span id="track-order-id">RSTC-00000</span></p>
+                    </div>
+                </div>
+
+                <!-- Cancel Bar -->
+                <div id="cancel-bar" class="cancel-order-container hidden">
+                    <div class="cancel-timer">Cancel within: <span id="timer-count">02:00</span></div>
+                    <button id="btn-cancel-order" class="cancel-btn" onclick="cancelOrder()">Cancel Order</button>
+                </div>
+
+                <!-- Live Map -->
+                <div class="live-map-container">
+                    <div class="map-placeholder">
+                        <div class="pulse-ring"></div>
+                        <div class="delivery-boy-icon" id="delivery-icon">
+                            <i data-lucide="bike"></i>
+                        </div>
+                        <div class="destination-icon">
+                            <i data-lucide="home"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="tracking-info-panel">
+                    <div class="status-stepper" id="status-stepper">
+                        <div class="step active" id="step-placed">
+                            <div class="step-icon"><i data-lucide="check"></i></div>
+                            <div class="step-text"><strong>Order Placed</strong><small id="placed-time">--:--</small></div>
+                        </div>
+                        <div class="step in-progress" id="step-preparing">
+                            <div class="step-icon"></div>
+                            <div class="step-text"><strong>Preparing your food</strong><small>Expected in 5 mins</small></div>
+                        </div>
+                        <div class="step" id="step-onway">
+                            <div class="step-icon"></div>
+                            <div class="step-text"><strong>On the way</strong><small>Delivery partner assigned</small></div>
+                        </div>
+                        <div class="step" id="step-delivered">
+                            <div class="step-icon"></div>
+                            <div class="step-text"><strong>Delivered</strong><small>Order complete</small></div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-partner-card" onclick="openPartnerProfile()" style="cursor:pointer;">
+                        <div class="partner-info">
+                            <div class="partner-img">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Delivery Partner" onerror="this.src='https://placehold.co/50x50/f7cb46/1a1a1a?text=RK'">
+                            </div>
+                            <div class="partner-details">
+                                <label>Delivery Partner</label>
+                                <strong>Rahul Sharma</strong>
+                                <div class="rating-mini"><i data-lucide="star"></i> 4.8 (2.4k ratings)</div>
+                            </div>
+                        </div>
+                        <div class="partner-actions">
+                            <button class="call-btn" onclick="event.stopPropagation();makeCall()"><i data-lucide="phone"></i></button>
+                            <button class="msg-btn" onclick="event.stopPropagation();openChat()"><i data-lucide="message-square"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="order-preview">
+                        <div class="preview-header">
+                            <h4>Order Details</h4>
+                            <button class="text-link" onclick="showScreen('checkout')">View Bill</button>
+                        </div>
+                        <div id="track-items-list" class="cart-list"></div>
+                        <div style="margin-top:14px;padding-top:14px;border-top:1px dashed #eee;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-weight:700;color:#999;font-size:13px;">Final Amount Paid</span>
+                            <strong id="track-total-val" style="font-size:18px;font-weight:900;color:#d97706;">₹0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main><!-- /screen-container -->
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="showScreen('home')">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" onclick="showScreen('orders')">
+            <div class="nav-icon-wrap">
+                <i data-lucide="history"></i>
+                <div id="order-badge" class="nav-badge hidden"></div>
+            </div>
+            <span>Orders</span>
+        </button>
+        <!-- Center cart button — opens checkout if cart has items, else home -->
+        <button class="nav-center-btn" onclick="navCenterClick()">
+            <i data-lucide="shopping-bag"></i>
+        </button>
+        <button class="nav-item" onclick="showScreen('favorites')">
+            <i data-lucide="heart"></i>
+            <span>Saved</span>
+        </button>
+        <button class="nav-item" onclick="showScreen('shop')">
+            <i data-lucide="store"></i>
+            <span>About</span>
+        </button>
+    </nav>
+
+    <!-- ===== STICKY CART BAR ===== -->
+    <div id="sticky-cart-bar" class="sticky-cart-bar hidden" onclick="showScreen('checkout')">
+        <div class="cart-summary">
+            <div class="cart-icon-bg"><i data-lucide="shopping-bag"></i></div>
+            <div class="cart-info">
+                <span id="cart-count">0 Items</span>
+                <small>View Cart</small>
+            </div>
+        </div>
+        <div class="cart-total">
+            <strong id="cart-bar-total">₹0</strong>
+            <small>+ delivery</small>
+        </div>
+    </div>
+
+    <!-- ===== OPTIONS MODAL ===== -->
+    <div id="options-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Flavor</h3>
+                <button class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div id="options-list" class="options-list"></div>
+            <button id="confirm-options-btn" class="primary-btn mt-4">Confirm & Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- ===== CHAT MODAL ===== -->
+    <div id="chat-modal" class="modal hidden">
+        <div class="modal-content" style="border-radius:24px 24px 0 0;padding:0;display:flex;flex-direction:column;height:75vh;">
+            <div class="modal-header" style="padding:18px 20px;border-bottom:1px solid #eee;margin-bottom:0;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" style="width:40px;height:40px;border-radius:12px;background:#eee;" alt="Partner">
+                    <div>
+                        <h3 style="font-size:15px;font-weight:900;margin:0;">Rahul Sharma</h3>
+                        <small style="color:#27ae60;font-weight:700;">● Online</small>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeChat()"><i data-lucide="x"></i></button>
+            </div>
+            <div id="chat-messages" style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:#fdfdfd;">
+                <div style="background:#f1f1f1;padding:11px 15px;border-radius:4px 16px 16px 16px;align-self:flex-start;max-width:82%;font-size:13px;font-weight:600;color:#333;">
+                    Hi! I've picked up your order from Roop Singh. On my way! 🏍️
+                </div>
+                <div style="background:#f1f1f1;padding:11px 15px;border-radius:4px 16px 16px 16px;align-self:flex-start;max-width:82%;font-size:13px;font-weight:600;color:#333;">
+                    Please be available at the delivery location.
+                </div>
+            </div>
+            <div style="padding:14px 18px;border-top:1px solid #eee;display:flex;gap:10px;align-items:center;background:white;">
+                <input type="text" id="chat-input" placeholder="Type a message…" style="flex:1;padding:11px 18px;border-radius:50px;border:1.5px solid #eee;outline:none;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;transition:border-color 0.2s;" onfocus="this.style.borderColor='#f7cb46'" onblur="this.style.borderColor='#eee'">
+                <button onclick="sendChatMsg()" style="background:var(--primary);color:#1a1a1a;border:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                    <i data-lucide="send" style="width:18px;height:18px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DELIVERY PARTNER PROFILE MODAL ===== -->
+    <div id="partner-profile-modal" class="modal hidden">
+        <div class="modal-content" style="padding:0;border-radius:24px;overflow:hidden;max-width:440px;width:92%;">
+            <div style="background:linear-gradient(135deg,#f7cb46,#f59e0b);height:90px;position:relative;">
+                <button class="close-btn" onclick="closePartnerProfile()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.25);color:#1a1a1a;"><i data-lucide="x" style="width:15px;height:15px;"></i></button>
+            </div>
+            <div style="padding:0 22px 28px;text-align:center;margin-top:-40px;">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" style="width:80px;height:80px;border-radius:20px;border:4px solid white;background:white;margin:0 auto 14px;display:block;" alt="Rahul">
+                <h3 style="font-size:20px;font-weight:900;margin-bottom:4px;">Rahul Sharma</h3>
+                <p style="color:#666;font-size:12px;font-weight:700;margin-bottom:16px;">⭐ Gold Star Delivery Partner</p>
+                <div style="display:flex;justify-content:center;gap:24px;margin-bottom:22px;padding:14px;background:#f8fafc;border-radius:16px;">
+                    <div><strong style="font-size:16px;display:block;">4.8</strong><small style="color:#999;font-size:10px;font-weight:700;">RATING</small></div>
+                    <div style="border-left:1px solid #eee;"></div>
+                    <div><strong style="font-size:16px;display:block;">2.4k</strong><small style="color:#999;font-size:10px;font-weight:700;">DELIVERIES</small></div>
+                    <div style="border-left:1px solid #eee;"></div>
+                    <div><strong style="font-size:16px;display:block;">2 Yrs</strong><small style="color:#999;font-size:10px;font-weight:700;">EXPERIENCE</small></div>
+                </div>
+                <div style="text-align:left;background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:18px;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <i data-lucide="map-pin" style="width:16px;height:16px;color:#e63946;flex-shrink:0;"></i>
+                        <div><small style="display:block;font-size:9px;color:#999;font-weight:800;text-transform:uppercase;">Current Location</small><span style="font-size:12px;font-weight:700;">Near Alambagh Metro Station</span></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <i data-lucide="phone" style="width:16px;height:16px;color:#27ae60;flex-shrink:0;"></i>
+                        <div><small style="display:block;font-size:9px;color:#999;font-weight:800;text-transform:uppercase;">Contact</small><span style="font-size:12px;font-weight:700;">+91 98765 43210</span></div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:14px 22px;background:#fff;border-top:1px solid #eee;">
+                <button class="primary-btn" onclick="makeCall()">📞 Call Rahul Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div id="auth-modal" class="modal hidden">
+        <div id="auth-modal-content" class="modal-content" style="border-radius:28px 28px 0 0;padding:0;max-height:92vh;overflow-y:auto;">
+
+            <div style="display:flex;justify-content:flex-end;padding:16px 20px 0;">
+                <button onclick="closeAuthModal()" class="close-btn"><i data-lucide="x"></i></button>
+            </div>
+
+            <!-- Step 0: Choose -->
+            <div id="auth-step-0" class="auth-step" style="padding:8px 24px 32px;text-align:center;">
+                <div style="width:64px;height:64px;background:var(--primary);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-weight:900;font-size:20px;color:#1a1a1a;">RS</div>
+                <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;">Welcome!</h2>
+                <p style="color:#888;font-size:14px;margin:0 0 28px;">Aapka apna street food app 🌟</p>
+                <button onclick="openLoginPage()" class="primary-btn" style="margin-bottom:12px;font-size:15px;">Sign In / Sign Up</button>
+                <p style="margin-top:16px;font-size:11px;color:#bbb;">By continuing, you agree to our Terms &amp; Privacy Policy</p>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /.mobile-container -->
+
+<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Roop Singh Tikki Chaat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary:  #f7cb46;
+            --accent:   #e67e22;
+            --purple:   #8B5CF6;
+            --purple-lt:#EDE9FE;
+            --text:     #1a1a2e;
+            --sub:      #6b7280;
+            --border:   #e5e7eb;
+            --radius:   18px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== BLOB TOP ===== */
+        .blob-top {
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle at 60% 40%, #f7cb46 0%, #f59e0b 45%, #fde68a 100%);
+            border-radius: 50%;
+            opacity: 0.85;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(2px);
+        }
+
+        .blob-top-2 {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(247,203,70,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            background: #fff;
+        }
+        .screen.active { display: block; }
+
+        .screen-inner {
+            padding: 100px 28px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== BACK BTN ===== */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            width: 40px; height: 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        /* ===== BRAND LOGO ===== */
+        .brand-badge {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 20px;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(247,203,70,0.4);
+        }
+
+        /* ===== TITLES ===== */
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--sub);
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+
+        .subtitle a {
+            color: var(--purple);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* ===== FORM FIELDS ===== */
+        .field-group { margin-bottom: 16px; }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            gap: 10px;
+            background: #fafafa;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-row:focus-within {
+            border-color: var(--primary);
+            background: #fffdf5;
+            box-shadow: 0 0 0 3px rgba(247,203,70,0.15);
+        }
+
+        .input-prefix {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text);
+            white-space: nowrap;
+            border-right: 1.5px solid var(--border);
+            padding-right: 12px;
+        }
+
+        .input-icon {
+            color: #9ca3af;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .input-row input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .input-row input::placeholder { color: #d1d5db; font-weight: 400; }
+
+        .forgot-link {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--purple);
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        /* ===== OTP BOXES ===== */
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 28px 0 20px;
+        }
+
+        .otp-box {
+            width: 48px; height: 56px;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text);
+            outline: none;
+            font-family: inherit;
+            background: #fafafa;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -moz-appearance: textfield;
+        }
+        .otp-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(247,203,70,0.2);
+            background: #fffdf5;
+        }
+        .otp-box::-webkit-outer-spin-button,
+        .otp-box::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+        /* ===== MAIN BUTTON ===== */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--purple);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 28px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 24px rgba(139,92,246,0.35);
+            font-family: inherit;
+            float: right;
+        }
+
+        .btn-primary:active { transform: scale(0.97); }
+
+        .btn-primary.full {
+            float: none;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary .arrow-icon {
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 32px 0 24px;
+            color: #d1d5db;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ===== SOCIAL LOGIN ===== */
+        .social-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .social-btn {
+            width: 48px; height: 48px;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            background: #fff;
+            font-size: 20px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .social-btn:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(247,203,70,0.2); }
+
+        /* ===== OTP HINT ===== */
+        .otp-hint {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+            padding: 8px 16px;
+            background: #fff7ed;
+            border-radius: 10px;
+        }
+
+        /* ===== SUCCESS SCREEN ===== */
+        .success-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 28px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, #f7cb46, #f59e0b);
+            border-radius: 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px;
+            margin-bottom: 28px;
+            box-shadow: 0 20px 40px rgba(247,203,70,0.35);
+            transform: rotate(-5deg);
+        }
+
+        /* ===== CLEARFIX ===== */
+        .clearfix::after { content: ''; display: block; clear: both; }
+
+        /* ===== ANIMATION ===== */
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .screen.active .screen-inner { animation: slideInUp 0.3s ease; }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60% { transform: translateX(-6px); }
+            40%,80% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===================== SCREEN 1: LOGIN ===================== -->
+<div id="screen-login" class="screen active">
+    <div class="blob-top"></div>
+    <div class="blob-top-2"></div>
+
+    <div class="screen-inner">
+        <div class="brand-badge">RS</div>
+
+        <h1>Login</h1>
+        <p class="subtitle">Don't have an account? <a href="#" onclick="showScreen('signup')">sign up</a></p>
+
+        <div class="field-group">
+            <div class="input-row">
+                <span class="input-prefix">+91</span>
+                <input type="number" id="login-mobile" placeholder="Mobile number" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="input-row">
+                <span class="input-icon">🔒</span>
+                <input type="email" id="login-email" placeholder="Email (optional)">
+                <span class="forgot-link" onclick="alert('OTP will be used for verification')">OTP</span>
+            </div>
+        </div>
+
+        <div class="clearfix" style="margin-top: 32px;">
+            <button class="btn-primary" onclick="sendLoginOtp()">
+                Login
+                <div class="arrow-icon">→</div>
+            </button>
+        </div>
+
+        <div class="divider">or continue with</div>
+
+        <div class="social-row">
+            <div class="social-btn" title="Apple">🍎</div>
+            <div class="social-btn" title="Facebook">🔵</div>
+            <div class="social-btn" title="Google">🔴</div>
+            <div class="social-btn" title="Twitter">🐦</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== SCREEN 2: SIGN UP ===================== -->
+<div id="screen-signup" class="screen">
+    <div class="blob-top"></div>
+    <div class="blob-top-2"></div>
+
+    <button class="back-btn" onclick="showScreen('login')">←</button>
+
+    <div class="screen-inner">
+        <h1>Create account</h1>
+        <p class="subtitle">Already have an account? <a href="#" onclick="showScreen('login')">sign in</a></p>
+
+        <div class="field-group">
+            <div class="input-row">
+                <span class="input-icon">👤</span>
+                <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="input-row">
+                <span class="input-prefix">+91</span>
+                <input type="number" id="signup-mobile" placeholder="Mobile number" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="input-row">
+                <span class="input-icon">📧</span>
+                <input type="email" id="signup-email" placeholder="Email address" autocomplete="email">
+            </div>
+        </div>
+
+        <div class="clearfix" style="margin-top: 32px;">
+            <button class="btn-primary" onclick="sendSignupOtp()">
+                Sign up
+                <div class="arrow-icon">→</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== SCREEN 3: OTP ===================== -->
+<div id="screen-otp" class="screen">
+    <button class="back-btn" onclick="goBackFromOtp()">←</button>
+
+    <div class="screen-inner" style="text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">📱</div>
+        <h1 style="font-size: 26px;">Verify OTP</h1>
+        <p class="subtitle" id="otp-subtitle">6-digit code sent to your number</p>
+
+        <div class="otp-container">
+            <input class="otp-box" type="number" id="o1" maxlength="1" oninput="otpNext(this,'o2')">
+            <input class="otp-box" type="number" id="o2" maxlength="1" oninput="otpNext(this,'o3')">
+            <input class="otp-box" type="number" id="o3" maxlength="1" oninput="otpNext(this,'o4')">
+            <input class="otp-box" type="number" id="o4" maxlength="1" oninput="otpNext(this,'o5')">
+            <input class="otp-box" type="number" id="o5" maxlength="1" oninput="otpNext(this,'o6')">
+            <input class="otp-box" type="number" id="o6" maxlength="1">
+        </div>
+
+        <div class="otp-hint">💡 Demo OTP: <strong>123456</strong></div>
+
+        <button class="btn-primary full" style="margin-top: 8px;" onclick="verifyOtp()">
+            Verify & Continue
+            <div class="arrow-icon">✓</div>
+        </button>
+
+        <button onclick="resendOtp()" style="background:none;border:none;color:var(--sub);font-size:13px;cursor:pointer;margin-top:20px;font-family:inherit;font-weight:600;display:block;width:100%;text-align:center;">
+            Didn't receive code? <span style="color:var(--purple);font-weight:800;">Resend</span>
+        </button>
+    </div>
+</div>
+
+<!-- ===================== SCREEN 4: SUCCESS ===================== -->
+<div id="screen-success" class="screen">
+    <div class="success-wrap">
+        <div class="success-icon">🎉</div>
+        <h1 id="success-name" style="font-size: 28px; margin-bottom: 10px;">Welcome!</h1>
+        <p style="color: var(--sub); font-size: 15px; margin-bottom: 8px;" id="success-detail">You're all set!</p>
+        <p style="color: #9ca3af; font-size: 13px; margin-bottom: 40px;">Roop Singh Tikki Chaat awaits you 🍛</p>
+
+        <button class="btn-primary full" style="background: var(--primary); color: var(--text); box-shadow: 0 8px 24px rgba(247,203,70,0.4);" onclick="goToApp()">
+            Start Ordering
+            <div class="arrow-icon" style="background: rgba(0,0,0,0.1);">→</div>
+        </button>
+    </div>
+</div>
+
+<script>
+    let _authMode = 'login';
+    let _pending  = {};
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-' + id).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // ── LOGIN: send OTP ──
+    function sendLoginOtp() {
+        const mobile = document.getElementById('login-mobile').value.trim();
+        const email  = document.getElementById('login-email').value.trim();
+        if (mobile.length !== 10) { shake(document.querySelector('#screen-login .input-row')); alert('Please enter a valid 10-digit mobile number'); return; }
+        _authMode = 'login';
+        _pending  = { name: 'User', phone: '+91 ' + mobile, email };
+        document.getElementById('otp-subtitle').innerText = `Code sent to +91 ${mobile}`;
+        clearOtp();
+        showScreen('otp');
+        setTimeout(() => document.getElementById('o1').focus(), 100);
+    }
+
+    // ── SIGNUP: send OTP ──
+    function sendSignupOtp() {
+        const name   = document.getElementById('signup-name').value.trim();
+        const mobile = document.getElementById('signup-mobile').value.trim();
+        const email  = document.getElementById('signup-email').value.trim();
+        if (!name)               { alert('Please enter your name'); return; }
+        if (mobile.length !== 10){ alert('Please enter a valid 10-digit mobile number'); return; }
+        if (!email || !email.includes('@')) { alert('Please enter a valid email address'); return; }
+        _authMode = 'signup';
+        _pending  = { name, phone: '+91 ' + mobile, email };
+        document.getElementById('otp-subtitle').innerText = `Code sent to +91 ${mobile}`;
+        clearOtp();
+        showScreen('otp');
+        setTimeout(() => document.getElementById('o1').focus(), 100);
+    }
+
+    function goBackFromOtp() {
+        showScreen(_authMode === 'signup' ? 'signup' : 'login');
+    }
+
+    // ── OTP boxes ──
+    function otpNext(el, nextId) {
+        const v = el.value.toString();
+        if (v.length > 1) el.value = v.slice(-1);
+        if (v.length >= 1 && nextId) {
+            const next = document.getElementById(nextId);
+            if (next) next.focus();
+        }
+    }
+
+    function clearOtp() {
+        ['o1','o2','o3','o4','o5','o6'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+    }
+
+    function getOtp() {
+        return ['o1','o2','o3','o4','o5','o6'].map(id => {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : '';
+        }).join('');
+    }
+
+    // ── Verify OTP ──
+    function verifyOtp() {
+        const entered = getOtp();
+        if (entered === '123456') {
+            // Save user to localStorage (shared with main app)
+            localStorage.setItem('currentUser', JSON.stringify(_pending));
+            // Success screen
+            document.getElementById('success-name').innerText =
+                `Welcome, ${_pending.name.split(' ')[0]}! 🎉`;
+            document.getElementById('success-detail').innerText =
+                `${_pending.phone}  ·  ${_pending.email || 'No email provided'}`;
+            showScreen('success');
+        } else {
+            // Shake all boxes
+            document.querySelectorAll('.otp-box').forEach(b => {
+                b.style.borderColor = '#e63946';
+                b.style.animation = 'shake 0.4s ease';
+                setTimeout(() => { b.style.borderColor = ''; b.style.animation = ''; }, 500);
+            });
+            alert('Wrong OTP! Use 123456 (demo)');
+        }
+    }
+
+    function resendOtp() {
+        clearOtp();
+        alert('OTP resent! (Demo: 123456)');
+        setTimeout(() => document.getElementById('o1').focus(), 100);
+    }
+
+    // ── Redirect to main app ──
+    function goToApp() {
+        window.location.href = 'index.html';
+    }
+
+    // ── Shake animation helper ──
+    function shake(el) {
+        el.style.animation = 'shake 0.4s ease';
+        setTimeout(() => el.style.animation = '', 500);
+    }
+
+    // ── If already logged in, skip to success ──
+    (function() {
+        const saved = localStorage.getItem('currentUser');
+        if (saved) {
+            try {
+                _pending = JSON.parse(saved);
+                document.getElementById('success-name').innerText = `Welcome back, ${_pending.name.split(' ')[0]}! 👋`;
+                document.getElementById('success-detail').innerText = _pending.phone || '';
+                showScreen('success');
+            } catch(e) {}
+        }
+    })();
+</script>
+</body>
+</html>
