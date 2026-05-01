@@ -1644,23 +1644,7 @@ function closePartnerProfile() {
 
 // ===== AUTH =====
 function openZomatoStall() {
-    // Try Zomato app deep link first (works on mobile), fallback to browser
-    const appLink = 'zomato://restaurant/roop-singh-tikki-chaat-center-alambagh';
-    const webLink = 'https://www.zomato.com/lucknow/roop-singh-tikki-chaat-center-alambagh';
-    
-    // On mobile: attempt app deep link, fallback to web after 1.5s
-    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-    if (isMobile) {
-        const start = Date.now();
-        window.location.href = appLink;
-        setTimeout(() => {
-            if (Date.now() - start < 2000) {
-                window.open(webLink, '_blank');
-            }
-        }, 1500);
-    } else {
-        window.open(webLink, '_blank');
-    }
+    window.open('https://zomato.onelink.me/xqzv/51f0dztw', '_blank');
 }
 
 function openLoginPage() {
