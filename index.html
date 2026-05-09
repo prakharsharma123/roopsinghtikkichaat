@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Temporarily Offline</title>
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f7cb46; /* Theme Gold */
+            --primary-dark: #d97706;
+            --secondary: #1c4e80; /* Theme Blue */
+            --accent-red: #e63946;
+            --bg-light: #f8f8f8;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --text-gray: #999999;
+            --shadow-premium: 0 30px 80px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(247, 203, 70, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(28, 78, 128, 0.04) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 45px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Accent Bar */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .offline-status {
+            margin-bottom: 25px;
+        }
+
+        .icon-wrapper {
+            width: 90px;
+            height: 90px;
+            background: #fff9e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(247, 203, 70, 0.1);
+        }
+
+        .icon-main {
+            font-size: 36px;
+            color: var(--primary-dark);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .badge {
+            background: #fff1f2;
+            color: var(--accent-red);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            border: 1px solid rgba(230, 57, 70, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .description {
+            color: var(--text-dim);
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 35px;
+        }
+
+        .payment-box {
+            background: #fdfcf7;
+            border-radius: 24px;
+            padding: 25px 20px;
+            border: 1px solid #fef3c7;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-gray);
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .total-amount {
+            font-size: 38px;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .total-amount span {
+            color: var(--primary-dark);
+            font-size: 22px;
+            margin-right: 2px;
+        }
+
+        .penalty-tag {
+            font-size: 11px;
+            color: #d97706;
+            background: rgba(247, 203, 70, 0.15);
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .qr-area {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 16px;
+            width: 190px;
+            height: 190px;
+            margin: 25px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+        }
+
+        .qr-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .pay-button {
+            background: var(--primary);
+            color: #1a1a1a;
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(247, 203, 70, 0.3);
+        }
+
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(247, 203, 70, 0.4);
+            background: #f5c42f;
+        }
+
+        .upi-id-copy {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .upi-id-copy:hover {
+            background: #f5f5f5;
+            color: var(--text-main);
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .footer strong {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="offline-status">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-cloud-bolt icon-main"></i>
+                </div>
+                <div class="badge">Website Restricted</div>
+            </div>
+
+            <h1>Payment Required</h1>
+            <p class="description">
+                Access to <b>Roop Singh Tikki Chaat Corner</b> has been temporarily limited due to a payment delay. Normal service will resume immediately after the dues are cleared.
+            </p>
+
+            <div class="payment-box">
+                <span class="label">Total Amount Due</span>
+                <div class="total-amount"><span>₹</span>1,100</div>
+                <span class="penalty-tag">+₹100 Penalty Included</span>
+
+                <div class="qr-area" id="qr-area">
+                    <!-- QR Code Placeholder -->
+                    <i class="fas fa-circle-notch fa-spin" style="color: #ddd; font-size: 30px;"></i>
+                </div>
+
+                <a href="upi://pay?pa=8318276922@kotakbank&pn=Prakhar%20Sharma&am=1100&cu=INR" class="pay-button">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    Pay via UPI App
+                </a>
+
+                <div class="upi-id-copy" onclick="copyUPI()">
+                    <span id="upi-id">8318276922@kotakbank</span>
+                    <i class="fa-regular fa-copy"></i>
+                </div>
+            </div>
+
+            <div class="footer">
+                Account Holder: <strong>Prakhar Sharma</strong>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">UPI ID Copied to Clipboard</div>
+
+    <script>
+        const upiId = "8318276922@kotakbank";
+        const name = "Prakhar Sharma";
+        const amount = "1100";
+
+        function loadQR() {
+            const upiUri = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
+            
+            const qrArea = document.getElementById('qr-area');
+            const img = new Image();
+            img.src = qrUrl;
+            img.onload = () => {
+                qrArea.innerHTML = '';
+                qrArea.appendChild(img);
+            };
+        }
+
+        function copyUPI() {
+            const upiText = document.getElementById('upi-id').innerText;
+            navigator.clipboard.writeText(upiText).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadQR);
+    </script>
+</body>
+</html>
